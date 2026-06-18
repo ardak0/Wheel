@@ -1,0 +1,7 @@
+{
+    "name": "WheelDemo.Editor",
+    "rootNamespace": "WheelDemo.EditorTools",
+    "references": [],
+    "includePlatforms": [ "Editor" ],
+    "autoReferenced": true
+}
