@@ -36,6 +36,13 @@ namespace WheelDemo.Gameplay
             gameController.SpinResolved -= SpinTo;
         }
 
+        private void OnDestroy()
+        {
+            // Kill the spin tween so its OnComplete lambda can't fire after this
+            // object is gone (it captures sliceContainer and gameController).
+            if (sliceContainer != null) sliceContainer.DOKill();
+        }
+
         private void Rebuild(int zone, Data.WheelConfigSO wheel)
         {
             if (wheelBaseImage != null && wheel.BaseSprite != null)

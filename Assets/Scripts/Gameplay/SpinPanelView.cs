@@ -17,7 +17,7 @@ namespace WheelDemo.Gameplay
             uiButtonLeave.onClick.AddListener(gameController.RequestCashOut);
 
             gameController.StateMachine.StateChanged += OnStateChanged;
-            gameController.ZoneStarted += (_, __) => Refresh();
+            gameController.ZoneStarted += OnZoneStarted;
             Refresh();
         }
 
@@ -26,9 +26,13 @@ namespace WheelDemo.Gameplay
             uiButtonSpin.onClick.RemoveListener(gameController.RequestSpin);
             uiButtonLeave.onClick.RemoveListener(gameController.RequestCashOut);
             gameController.StateMachine.StateChanged -= OnStateChanged;
+            gameController.ZoneStarted -= OnZoneStarted;
         }
 
         private void OnStateChanged(Core.GameState from, Core.GameState to) => Refresh();
+
+        // Named handler so the subscription can be removed in OnDisable.
+        private void OnZoneStarted(int zone, Data.WheelConfigSO wheel) => Refresh();
 
         private void Refresh()
         {
