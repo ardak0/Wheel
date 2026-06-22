@@ -13,7 +13,10 @@ namespace WheelDemo.Gameplay
         [SerializeField] private Image wheelBaseImage;          // the tier base, child of sliceContainer
         [SerializeField] private Image indicatorImage;          // pointer, NOT under sliceContainer
         [SerializeField] private SliceView slicePrefab;
-        [SerializeField] private float radius = 150f;
+        [Tooltip("Slice ring radius as a share of the container's half-extent. " +
+                 "Relative (not a fixed pixel value) so it scales with the wheel " +
+                 "across 20:9 / 16:9 / 4:3 instead of overflowing.")]
+        [SerializeField, Range(0.1f, 1f)] private float radiusFraction = 0.62f;
         [SerializeField] private float angleOffset = 0f;        // nudge icons into the pockets
 
         [Header("Spin tween")]
@@ -58,6 +61,10 @@ namespace WheelDemo.Gameplay
             int n = wheel.SliceCount;
             sliceAngle = 360f / n;
 
+            // Derive the ring radius from the container's current size so the
+            // layout holds on any aspect ratio instead of a hard-coded 150px.
+            float radius = CurrentRadius();
+
             for (int i = 0; i < n; i++)
             {
                 var slice = wheel.Slices[i];
@@ -75,6 +82,16 @@ namespace WheelDemo.Gameplay
                 var icon = slice.Reward != null ? slice.Reward.Icon : null;
                 view.Bind(icon, amount, slice.IsBomb);
             }
+        }
+
+        // Half of the container's shorter side, scaled by radiusFraction. Using
+        // the live rect means the ring tracks the wheel under any CanvasScaler
+        // setup, so icons never spill outside the base on wide/tall screens.
+        private float CurrentRadius()
+        {
+            var rect = sliceContainer.rect;
+            float halfExtent = Mathf.Min(rect.width, rect.height) * 0.5f;
+            return halfExtent * radiusFraction;
         }
 
         private void SpinTo(int index)
