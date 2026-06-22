@@ -14,6 +14,7 @@ namespace WheelDemo.Gameplay
         [SerializeField] private RewardRow rowPrefab;
 
         private readonly Dictionary<RewardDefinitionSO, RewardRow> rows = new();
+        private ComponentPool<RewardRow> rowPool;
 
         private void OnEnable()
         {
@@ -31,7 +32,9 @@ namespace WheelDemo.Gameplay
         {
             if (!rows.TryGetValue(reward, out var row))
             {
-                row = Instantiate(rowPrefab, rowContainer);
+                rowPool ??= new ComponentPool<RewardRow>(rowPrefab, rowContainer);
+                row = rowPool.Get();
+                row.transform.SetAsLastSibling();
                 row.SetIcon(reward.Icon);
                 rows[reward] = row;
             }
@@ -40,8 +43,7 @@ namespace WheelDemo.Gameplay
 
         private void OnCleared()
         {
-            foreach (var row in rows.Values)
-                if (row != null) Destroy(row.gameObject);
+            rowPool?.ReleaseAll();
             rows.Clear();
         }
 
