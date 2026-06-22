@@ -19,8 +19,14 @@ those safe zones the player may **cash out** and keep what they have.
 
 ## Opening the project
 
-1. Clone the repo and open **Unity Hub**.
-2. Click **Add ▸ Add project from disk**.
+> **Git LFS required.** Binary assets (DOTween's DLLs, all sprites, the
+> TextMesh Pro font) are stored with [Git LFS](https://git-lfs.com). After
+> cloning, run `git lfs install` then `git lfs pull` so the real binaries
+> replace the LFS pointer files. Skipping this leaves DOTween.dll as a stub and
+> Unity opens in **Safe Mode** with `DG.Tweening.Core` compile errors.
+
+1. Clone the repo, then from the repo root run `git lfs install && git lfs pull`.
+2. Open **Unity Hub** and click **Add ▸ Add project from disk**.
 3. Select the **`Wheel`** folder itself — the one that directly contains
    `Assets/`, `Packages/`, and `ProjectSettings/`. Selecting a parent folder is
    the usual cause of Unity Hub showing *"No projects found."*
