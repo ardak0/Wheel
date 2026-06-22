@@ -21,7 +21,7 @@ namespace WheelDemo.Gameplay
         [SerializeField] private float spinDuration = 3.2f;
         [SerializeField] private Ease spinEase = Ease.OutCubic;
 
-        private SliceView[] spawned = System.Array.Empty<SliceView>();
+        private ComponentPool<SliceView> slicePool;
         private float sliceAngle;
 
         private void OnEnable()
@@ -50,19 +50,18 @@ namespace WheelDemo.Gameplay
             if (indicatorImage != null && wheel.IndicatorSprite != null)
                 indicatorImage.sprite = wheel.IndicatorSprite;
 
-            foreach (var s in spawned)
-                if (s != null) Destroy(s.gameObject);
+            slicePool ??= new ComponentPool<SliceView>(slicePrefab, sliceContainer);
+            slicePool.ReleaseAll();
 
             sliceContainer.localRotation = Quaternion.identity;
 
             int n = wheel.SliceCount;
             sliceAngle = 360f / n;
-            spawned = new SliceView[n];
 
             for (int i = 0; i < n; i++)
             {
                 var slice = wheel.Slices[i];
-                var view = Instantiate(slicePrefab, sliceContainer);
+                var view = slicePool.Get();
                 view.name = $"ui_slice_{i}";
 
                 float ang = i * sliceAngle + angleOffset;
@@ -75,7 +74,6 @@ namespace WheelDemo.Gameplay
                 int amount = wheel.GetScaledAmount(slice, zone);
                 var icon = slice.Reward != null ? slice.Reward.Icon : null;
                 view.Bind(icon, amount, slice.IsBomb);
-                spawned[i] = view;
             }
         }
 
