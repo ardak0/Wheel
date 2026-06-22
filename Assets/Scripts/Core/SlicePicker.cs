@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using WheelDemo.Data;
 
 namespace WheelDemo.Core
@@ -16,16 +17,25 @@ namespace WheelDemo.Core
         public int PickSliceIndex(WheelConfigSO config)
         {
             var slices = config.Slices;
+            var weights = new float[slices.Count];
+            for (int i = 0; i < slices.Count; i++) weights[i] = slices[i].Weight;
+            return PickIndexByWeights(weights);
+        }
+
+        // Pure, Unity-free core so it can be unit-tested directly with a seeded
+        // RNG and plain weights, without authoring a ScriptableObject.
+        public int PickIndexByWeights(IReadOnlyList<float> weights)
+        {
             float total = 0f;
-            for (int i = 0; i < slices.Count; i++) total += slices[i].Weight;
+            for (int i = 0; i < weights.Count; i++) total += weights[i];
 
             double roll = rng.NextDouble() * total;
-            for (int i = 0; i < slices.Count; i++)
+            for (int i = 0; i < weights.Count; i++)
             {
-                roll -= slices[i].Weight;
+                roll -= weights[i];
                 if (roll <= 0d) return i;
             }
-            return slices.Count - 1;
+            return weights.Count - 1;
         }
     }
 }

@@ -1,0 +1,16 @@
+{
+    "name": "WheelDemo.Core",
+    "rootNamespace": "WheelDemo.Core",
+    "references": [
+        "WheelDemo.Data"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
