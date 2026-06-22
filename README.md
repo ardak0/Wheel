@@ -56,7 +56,7 @@ Assets/Scripts/
 ├── Data/      (WheelDemo.Data)     ScriptableObjects: WheelConfigSO, RewardDefinitionSO, SliceEntry, WheelTier
 ├── Core/      (WheelDemo.Core)     Pure C#: ZoneRules, GameStateMachine, SlicePicker, RewardInventory
 ├── Gameplay/  (Assembly-CSharp)    GameController + view MonoBehaviours, ComponentPool
-├── Loading/   (WheelDemo.Loading)  AddressableIconService (gated by ADDRESSABLES_PRESENT)
+├── Loading/   (WheelDemo.Loading)  IconLoader facade + optional Addressables backend (gated)
 └── Editor/    (WheelDemo.Editor)   ImageRaycastCleaner editor tool
 ```
 
