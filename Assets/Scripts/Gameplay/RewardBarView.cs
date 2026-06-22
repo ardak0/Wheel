@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WheelDemo.Data;
+using WheelDemo.Loading;
 
 namespace WheelDemo.Gameplay
 {
@@ -35,8 +36,26 @@ namespace WheelDemo.Gameplay
                 rowPool ??= new ComponentPool<RewardRow>(rowPrefab, rowContainer);
                 row = rowPool.Get();
                 row.transform.SetAsLastSibling();
-                row.SetIcon(reward.Icon);
                 rows[reward] = row;
+
+                // Prefer an Addressables-loaded icon when the reward declares a
+                // key and the package is configured; otherwise use the embedded
+                // sprite. The captured row may be recycled before the async load
+                // completes, so guard with the reward still owning that row.
+                var capturedRow = row;
+                if (AddressableIconService.IsAvailable && !string.IsNullOrEmpty(reward.IconAddress))
+                {
+                    row.SetIcon(reward.Icon); // immediate fallback while loading
+                    AddressableIconService.LoadIcon(reward.IconAddress, sprite =>
+                    {
+                        if (sprite != null && rows.TryGetValue(reward, out var current) && current == capturedRow)
+                            capturedRow.SetIcon(sprite);
+                    });
+                }
+                else
+                {
+                    row.SetIcon(reward.Icon);
+                }
             }
             row.SetAmount(total);
         }
