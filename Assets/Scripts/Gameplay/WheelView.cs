@@ -13,10 +13,11 @@ namespace WheelDemo.Gameplay
         [SerializeField] private Image wheelBaseImage;          // the tier base, child of sliceContainer
         [SerializeField] private Image indicatorImage;          // pointer, NOT under sliceContainer
         [SerializeField] private SliceView slicePrefab;
-        [Tooltip("Slice ring radius as a share of the container's half-extent. " +
-                 "Relative (not a fixed pixel value) so it scales with the wheel " +
-                 "across 20:9 / 16:9 / 4:3 instead of overflowing.")]
-        [SerializeField, Range(0.1f, 1f)] private float radiusFraction = 0.62f;
+        [Tooltip("Slice ring radius as a share of the wheel base art's half-extent. " +
+                 "Relative (not a fixed pixel value) so it tracks the wheel size " +
+                 "across 20:9 / 16:9 / 4:3 instead of overflowing. 0.77 reproduces " +
+                 "the original 230px ring on the 600px base.")]
+        [SerializeField, Range(0.1f, 1f)] private float radiusFraction = 0.77f;
         [SerializeField] private float angleOffset = 0f;        // nudge icons into the pockets
 
         [Header("Spin tween")]
@@ -84,12 +85,16 @@ namespace WheelDemo.Gameplay
             }
         }
 
-        // Half of the container's shorter side, scaled by radiusFraction. Using
-        // the live rect means the ring tracks the wheel under any CanvasScaler
-        // setup, so icons never spill outside the base on wide/tall screens.
+        // Half of the wheel base art's shorter side, scaled by radiusFraction.
+        // The base image (not the small slice-container pivot) defines the wheel
+        // size, and it scales with the CanvasScaler, so the ring tracks the wheel
+        // under any aspect ratio without icons spilling outside the base.
         private float CurrentRadius()
         {
-            var rect = sliceContainer.rect;
+            var reference = wheelBaseImage != null
+                ? wheelBaseImage.rectTransform
+                : sliceContainer;
+            var rect = reference.rect;
             float halfExtent = Mathf.Min(rect.width, rect.height) * 0.5f;
             return halfExtent * radiusFraction;
         }
