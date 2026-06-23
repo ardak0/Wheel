@@ -92,12 +92,11 @@ Run them via **Window ▸ General ▸ Test Runner ▸ EditMode ▸ Run All**.
 - A **Sprite Atlas** packs the icon sprites to cut draw calls.
 
 The editor-side configuration (install the package, create the atlas, mark
-assets addressable, build content) is documented step-by-step in
-[`docs/UNITY_EDITOR_STEPS.md`](docs/UNITY_EDITOR_STEPS.md).
+assets addressable, build content) is done in the Unity editor.
 
 ## Building the Android APK
 
-Summary (full click-by-click in `docs/UNITY_EDITOR_STEPS.md`):
+Summary:
 
 1. **File ▸ Build Settings ▸ Android ▸ Switch Platform**.
 2. Add `SampleScene` to *Scenes In Build*.
@@ -125,5 +124,5 @@ Wheel/
 │   └── Plugins/        (DOTween)
 ├── Packages/
 ├── ProjectSettings/
-└── docs/               (editor steps + screenshots)
+└── docs/screenshots/   (aspect-ratio screenshots)
 ```
