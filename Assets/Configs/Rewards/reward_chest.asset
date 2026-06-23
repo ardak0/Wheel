@@ -15,3 +15,4 @@ MonoBehaviour:
   rewardId: reward_chest
   displayName: Chest
   icon: {fileID: 21300000, guid: f8b09ad3b2b6078488ff9fd70ed11264, type: 3}
+  iconAddress: icon_chest
